@@ -14,6 +14,9 @@ export class UsersService {
   async findOne(username: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ where: { username } }); // Busca un usuario por nombre de usuario
   }
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { email } });
+  }
 
   async create(userData: CreateUserDto): Promise<User> {
     const user = this.usersRepository.create(userData); // Crea un nuevo usuario

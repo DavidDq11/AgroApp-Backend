@@ -14,7 +14,7 @@ export class User {
   @Column() // Columna para el nombre del usuario
   name: string;
 
-  @Column() // Columna para el email
+  @Column({ unique: true })
   email: string;
 
   @Column({ default: true }) // Columna con un valor por defecto

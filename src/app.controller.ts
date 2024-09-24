@@ -16,6 +16,7 @@ export class AppController {
   getProfile(@Request() req) {
     return req.user;
   }
+  
 
   // Nueva ruta para la raíz
   @Get()
