@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../users/user.dto';
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
       const { password, ...result } = user;
       return result;
     }
-    return null;
+    throw new UnauthorizedException('Credentials are invalid');
   }
 
   async login(user: any) {
@@ -32,24 +33,15 @@ export class AuthService {
   }
 
   async register(createUserDto: CreateUserDto) {
-    console.log('Datos recibidos en el backend:', createUserDto); // Agregar este log
-    // Verifica si el email ya existe
-    const { email, password } = createUserDto;
+    const { email } = createUserDto;
 
     const existingUser = await this.usersService.findOneByEmail(email);
     if (existingUser) {
-      throw new ConflictException('Email already in use');
+      throw new ConflictException('Correo ya registrado en el sistema');
     }
 
-    console.log('Creating new user...');
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await this.usersService.create({
-      ...createUserDto,
-      password: hashedPassword,
-    });
-
-    console.log('User created:', newUser);
+    // Mueve la encriptación al método `create` del servicio de usuarios.
+    const newUser = await this.usersService.create(createUserDto);
 
     return newUser;
   }

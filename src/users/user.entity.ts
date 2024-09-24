@@ -8,7 +8,7 @@ export class User {
   @Column({ unique: true }) // Columna única para el nombre de usuario
   username: string;
 
-  @Column() // Columna para la contraseña
+  @Column('text')
   password: string;
 
   @Column() // Columna para el nombre del usuario
