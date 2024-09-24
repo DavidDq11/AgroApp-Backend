@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/user.dto';
 import * as bcrypt from 'bcrypt';
+import { LoginUserDto } from 'src/users/login-user.dto';
 
 
 @Injectable()
@@ -16,8 +17,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOneByEmail(email); // Cambia aquí para buscar por email
     if (user && (await bcrypt.compare(pass, user.password))) {
       const { password, ...result } = user;
       return result;
@@ -25,8 +26,16 @@ export class AuthService {
     throw new UnauthorizedException('Credentials are invalid');
   }
 
-  async login(user: any) {
-    const payload = { username: user.nombreUsuario, sub: user.id };
+  async login(loginUserDto: LoginUserDto) {
+    const user = await this.validateUser(
+      loginUserDto.email,
+      loginUserDto.password,
+    );
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials'); // Lanzar error si las credenciales son inválidas
+    }
+
+    const payload = { username: user.username, sub: user.id }; // Ajusta esto según tu estructura de usuario
     return {
       access_token: this.jwtService.sign(payload),
     };

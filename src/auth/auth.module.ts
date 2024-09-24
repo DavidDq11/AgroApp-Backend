@@ -2,12 +2,18 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module'; // Asegúrate de que la ruta sea correcta
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: 'tu_secreto', // Cambia esto por una clave secreta segura
-      signOptions: { expiresIn: '60s' }, // Opciones de firma
+    ConfigModule, // Importa el ConfigModule
+    JwtModule.registerAsync({
+      imports: [ConfigModule], // Asegúrate de importar el ConfigModule
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'), // Usa ConfigService para obtener la variable de entorno
+        signOptions: { expiresIn: '60s' }, // Opciones de firma
+      }),
     }),
     UsersModule, // Importa el módulo de usuarios
   ],
