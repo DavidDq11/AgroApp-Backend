@@ -24,6 +24,11 @@ import { UsersModule } from './users/users.module';
         ssl: {
           rejectUnauthorized: false,
         },
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
       }),
     }),
     UsersModule,
