@@ -15,17 +15,15 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: parseInt(configService.get('DB_PORT'), 10),
-        username: configService.get('DB_USER'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
+        url: configService.get('DATABASE_URL'),
         entities: [__dirname + '/**/*.entity.{js,ts}'],
         migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        synchronize: false,
+        synchronize: false, // Asegúrate de desactivarlo en producción
         logging: true,
         migrationsRun: true,
-        logger: 'advanced-console',
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
     }),
     UsersModule,

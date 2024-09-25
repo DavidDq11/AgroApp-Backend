@@ -17,6 +17,6 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ default: true }) // Columna con un valor por defecto
+  @Column({ default: true }) // Asegúrate de que la columna esté definida
   isActive: boolean;
 }
