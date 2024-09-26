@@ -11,7 +11,6 @@ async function bootstrap() {
     // Habilita CORS y permite solicitudes desde localhost y Vercel
     app.enableCors({
       origin: [
-        'http://localhost:3000', // Permitir desarrollo local
         process.env.FRONTEND_URL || 'https://agro-app-web.vercel.app', // Permitir producción
       ],
       methods: 'GET,POST,PUT,DELETE,OPTIONS',
