@@ -15,18 +15,17 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'), // Asegúrate que 'DATABASE_URL' esté bien configurada en Vercel/Render
-        entities: [__dirname + '/**/*.entity.{js,ts}'], // Especifica las entidades del proyecto
-        migrations: [__dirname + '/migrations/**/*{.ts,.js}'], // Rutas para tus migraciones
-        synchronize: false, // Asegúrate de que esto esté desactivado en producción
-        logging: true, // Muestra las consultas SQL en la consola
-        migrationsRun: true, // Ejecuta migraciones automáticamente al iniciar la aplicación
-        ssl:
-          configService.get('NODE_ENV') === 'production'
-            ? { rejectUnauthorized: false }
-            : false, // Habilita SSL solo en producción
+        url: configService.get<string>('DATABASE_URL'), // Tu URL de la base de datos NeonTech
+        entities: [__dirname + '/**/*.entity.{js,ts}'],
+        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+        synchronize: false, // Desactiva en producción para no perder datos
+        logging: true, // Habilitar logging para ver consultas
+        migrationsRun: true, // Ejecutar migraciones automáticamente al inicio
+        ssl: {
+          rejectUnauthorized: false, // Asegura que SSL está configurado correctamente
+        },
         extra: {
-          connectionTimeoutMillis: 30000, // Ajuste del tiempo de espera para conexiones
+          connectionTimeoutMillis: 30000, // Tiempo de espera en conexiones largas
         },
       }),
     }),
