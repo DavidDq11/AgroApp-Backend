@@ -7,12 +7,22 @@ async function bootstrap() {
   try {
     dotenv.config();
     const app = await NestFactory.create(AppModule);
-    app.enableCors();
+
+    // Habilita CORS y permite solicitudes desde Vercel
+    app.enableCors({
+      origin: process.env.FRONTEND_URL || 'https://agro-app-web.vercel.app',
+      methods: 'GET,POST,PUT,DELETE,OPTIONS',
+      credentials: true, // Si necesitas enviar cookies o autorizaciones
+    });
+
     app.useGlobalPipes(new ValidationPipe()); // Habilita la validación global
+
+    // Escucha en el puerto definido por Render o en el puerto 3001 por defecto
     await app.listen(process.env.PORT || 3001);
     console.log(`Application is running on: ${await app.getUrl()}`);
   } catch (error) {
     console.error('Error during application bootstrap:', error);
   }
 }
+
 bootstrap();
