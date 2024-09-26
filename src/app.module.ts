@@ -15,19 +15,18 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        url: configService.get('DATABASE_URL'),
-        entities: [__dirname + '/**/*.entity.{js,ts}'],
-        migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-        synchronize: false, // Asegúrate de desactivarlo en producción
-        logging: true,
-        migrationsRun: true,
-        ssl: {
-          rejectUnauthorized: false,
-        },
+        url: configService.get<string>('DATABASE_URL'), // Asegúrate que 'DATABASE_URL' esté bien configurada en Vercel/Render
+        entities: [__dirname + '/**/*.entity.{js,ts}'], // Especifica las entidades del proyecto
+        migrations: [__dirname + '/migrations/**/*{.ts,.js}'], // Rutas para tus migraciones
+        synchronize: false, // Asegúrate de que esto esté desactivado en producción
+        logging: true, // Muestra las consultas SQL en la consola
+        migrationsRun: true, // Ejecuta migraciones automáticamente al iniciar la aplicación
+        ssl:
+          configService.get('NODE_ENV') === 'production'
+            ? { rejectUnauthorized: false }
+            : false, // Habilita SSL solo en producción
         extra: {
-          ssl: {
-            rejectUnauthorized: false,
-          },
+          connectionTimeoutMillis: 30000, // Ajuste del tiempo de espera para conexiones
         },
       }),
     }),
