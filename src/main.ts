@@ -12,10 +12,12 @@ async function bootstrap() {
     app.enableCors({
       origin: [
         process.env.FRONTEND_URL || 'https://agro-app-web.vercel.app', // Permitir producción
+        'https://localhost:3000', // Permitir localhost si estás desarrollando localmente
       ],
       methods: 'GET,POST,PUT,DELETE,OPTIONS',
       credentials: true,
     });
+
 
     app.useGlobalPipes(new ValidationPipe()); // Habilita la validación global
 
